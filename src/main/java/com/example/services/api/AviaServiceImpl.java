@@ -73,6 +73,7 @@ public class AviaServiceImpl {
     }
 
     public Mono<JsonNode> makeApiRequest(AviaRequest aviaRequest){
+        // в .body преобразуем aviaRequest в AviaRequestApi и его уже передаем во внешнее апи
         return webClient.post()
                 .uri(baseUrl)
                 .body(Mono.just(new AviaRequestApi(aviaRequest)), AviaRequestApi.class)

@@ -21,6 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/*
+Итоговый сервис по изменению данных во все таблицах.
+ Лучше сделать отдельный модуль, пока не успел
+ */
 @Service
 public class TravelAccommodationServiceImpl {
     private final SubjectTypeServiceImpl subjectTypeService;
@@ -49,12 +53,16 @@ public class TravelAccommodationServiceImpl {
     }
 
     public List<TravelAndSubjectDto> save(List<PathDto> responses, UUID userId) throws JsonProcessingException {
+        // сохраненный список пар путешествие-объект
         List<TravelAndSubjectDto> travelAndSubjectDtosSaved = new ArrayList<>();
 
         for (PathDto response : responses){
             List<AviaDto> aviaDtoList = response.getAviaDto();
             List<HotelDto> hotelDtoList = response.getHotelDto();
+            //число отелей и перелетов может не совпадать. Вначале сохраняем пары
             int minDim = Math.min(aviaDtoList.size(), hotelDtoList.size());
+            // Получаем объект путешествия, внутри считаем итоговую длительность и стоимость,
+            // исходя из перелетов и отелей
             Travel travel = TravelDto.convertToTravel(aviaDtoList, hotelDtoList, userId);
 
             for (int i = 0; i < minDim; i++) {
@@ -75,6 +83,7 @@ public class TravelAccommodationServiceImpl {
                 );
             }
 
+            // добавляем отсавшиеся перелеты или отели
             for (int i = minDim; i < Math.max(aviaDtoList.size(), hotelDtoList.size()); i++) {
                 TravelSubjectDto travelSubjectDto = aviaDtoList.size() > hotelDtoList.size() ?
                         aviaDtoList.get(i) : hotelDtoList.get(i);
@@ -87,6 +96,7 @@ public class TravelAccommodationServiceImpl {
     }
 
 
+    // сохраняем объект путешествия, его тип и само путешествие
     public TravelAndSubjectDto saveRow(Travel travel,
                         Subject subject,
                         SubjectType subjectType,
@@ -97,15 +107,18 @@ public class TravelAccommodationServiceImpl {
         subject.setSubjectTypeId(subjectTypeDtoSaved.getId());
         SubjectDto subjectDtoSaved = subjectService.save(subject);
 
+        // сохраняем путешествие и его пары путешествие-объект
         return saveData(subjectDtoSaved, travel, travelSubjectDto);
     }
 
+    // сохраняем объект путешествия, его тип и само путешествие
     private TravelAndSubjectDto saveSubjectAndSubjectType(TravelSubjectDto travelSubjectDto, Travel travel) throws JsonProcessingException {
         SubjectType aviaSubjectType = travelSubjectDto.convertToSubjectType();
         Subject aviaSubject = travelSubjectDto.convertToSubject();
         return saveRow(travel, aviaSubject, aviaSubjectType, travelSubjectDto);
     }
 
+    // сохраняем путешествие и его пары путешествие-объект
     private TravelAndSubjectDto saveData(SubjectDto subjectDto,
                                          Travel travel,
                                          TravelSubjectDto travelSubjectDto) throws JsonProcessingException {

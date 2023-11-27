@@ -7,6 +7,11 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 
+/*
+Класс передачи тела запроса в апи авиабилетов. Это данные, которые вводит пользователь.
+Далее он преобразуется в AviaRequestApi
+Используется только для этого в makeApiRequest класса AviaServiceImpl
+ */
 @Data
 public class AviaRequest {
     @NotNull

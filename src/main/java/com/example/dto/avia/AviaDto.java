@@ -13,6 +13,9 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/*
+Итоговая сущность со всеми данными по перелету
+ */
 @Data
 public class AviaDto implements TravelSubjectDto {
 

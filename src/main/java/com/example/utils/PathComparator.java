@@ -6,6 +6,7 @@ import com.example.dto.hotel.HotelDto;
 
 import java.util.Comparator;
 
+//сортируем по дате и цене
 public class PathComparator implements Comparator<PathDto> {
     @Override
     public int compare(PathDto pathDto, PathDto t1) {

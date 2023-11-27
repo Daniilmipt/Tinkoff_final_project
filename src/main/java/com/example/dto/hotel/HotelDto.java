@@ -12,6 +12,9 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/*
+Итоговая сущность со всеми данными по отелю
+ */
 @Data
 public class HotelDto implements TravelSubjectDto {
 

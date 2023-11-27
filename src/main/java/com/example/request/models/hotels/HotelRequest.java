@@ -12,6 +12,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+/*
+Класс передачи тела запроса в апи авиабилетов.
+Представляет информацию о пунктах отправления и прибытия
+ */
 @Data
 public class HotelRequest {
     @NotNull

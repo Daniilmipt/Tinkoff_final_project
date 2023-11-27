@@ -7,6 +7,11 @@ import lombok.Data;
 
 import java.util.List;
 
+/*
+Итоговая сущность со всеми данными по путешествию.
+hotelDto - список отелей с order (порядок пребывания в них)
+aviaDto - список авиарейсов с их порядком(order)
+ */
 @Data
 public class PathDto {
     public PathDto(List<AviaDto> aviaDto, List<HotelDto> hotelDto){

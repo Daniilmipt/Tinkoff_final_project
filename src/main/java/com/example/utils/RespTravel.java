@@ -8,6 +8,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/*
+Проверяем, что дата и время указаны корректно и сортируем по самому праннему времени прибытия и цене
+ */
 public class RespTravel {
     private final List<List<AviaDto>> aviaLists;
     private final List<List<HotelDto>> hotelLists;
@@ -41,6 +44,7 @@ public class RespTravel {
         return pathDtoList.subList(0, 2);
     }
 
+    //проверяем дату
     private Optional<PathDto> filterSubjects(List<Integer> sequenceAvia, List<Integer> sequenceHotel){
         int minDim = Math.min(sequenceHotel.size(), sequenceAvia.size());
         LocalDateTime prevEndDateTime = LocalDateTime.MIN;
@@ -86,6 +90,7 @@ public class RespTravel {
         return Optional.of(new PathDto(aviaDtoList, hotelDtoList));
     }
 
+    //сортируем по дате и цене
     private void sortPathList(List<PathDto> pathList){
         pathList.sort(new PathComparator());
     }

@@ -9,6 +9,10 @@ import javax.validation.constraints.NotNull;
 
 import java.util.List;
 
+/*
+Класс передачи тела запроса в апи авиабилетов. Он уже передается во внешнее апи.
+Конструктор принимает AviaRequest
+ */
 @Data
 public class AviaRequestApi {
     @NotNull

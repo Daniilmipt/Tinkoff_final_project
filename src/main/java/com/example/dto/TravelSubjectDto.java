@@ -7,6 +7,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/*
+Интерфейс для получения общих данных для разных видов путешествий
+ */
 public interface TravelSubjectDto {
     LocalDateTime getDepartureDateTime();
     LocalDateTime getArrivalDateTime();
