@@ -9,7 +9,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
-import static com.example.utils.ValidationConstants.LOGIN_PATTERN;
 
 
 @AllArgsConstructor

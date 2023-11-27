@@ -12,10 +12,12 @@ import java.util.List;
 import java.util.Map;
 
 
+// Парсим данные отелей и возвращаем List<HotelDto>
 public class RespHotelsParser {
     @Getter
     private final JsonNode response;
 
+    // города из отелей и авиабилетов имеют разный язык, надо привести их к одному
     private final static Map<String, String> mapCityTranslit = TransliterationCity.mapCityTranslit;
 
     public RespHotelsParser(JsonNode response){
@@ -34,6 +36,7 @@ public class RespHotelsParser {
                 hotel.setHotelId(response.get("hotelId").asText());
                 hotel.setStars((short) response.get("stars").asInt());
                 hotel.setPriceAvg(response.get("priceAvg").asDouble());
+                // города из отелей и авиабилетов имеют разный язык, надо привести их к одному
                 hotel.setCity(mapCityTranslit.get(request.getCity()));
                 hotel.setOrder(request.getOrder());
 

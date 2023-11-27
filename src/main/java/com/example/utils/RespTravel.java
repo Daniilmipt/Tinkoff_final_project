@@ -30,6 +30,11 @@ public class RespTravel {
             sizeHotelArray.add(hotelList.size());
         }
 
+        // создаем все возможные пары комбинаций, например:
+        // есть массив [0,1,2]
+        // тогда все комбинации: [0,0,0], [0,0,1] [0,0,2]
+        // [0,1,0], [0,1,1], [0,1,2]
+        // нужно для перебора комбинаций
         List<List<Integer>> sequencesAvia = SequenceConstruction.generateSequences(sizeAviaArray);
         List<List<Integer>> sequencesHotel = SequenceConstruction.generateSequences(sizeHotelArray);
         

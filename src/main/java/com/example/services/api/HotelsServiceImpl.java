@@ -43,6 +43,7 @@ public class HotelsServiceImpl {
                 .toUriString();
     }
 
+    // асинхронно получаем данные
     public List<List<HotelDto>> handleRequest(List<HotelRequest> hotelRequests) throws InterruptedException {
         return rateLimiter.executeSupplier(() -> {
             List<List<HotelDto>> hotelDtoList = new ArrayList<>(hotelRequests.size());
@@ -68,8 +69,7 @@ public class HotelsServiceImpl {
                                 RespHotelsParser respHotelsParser = new RespHotelsParser(responseFinal);
                                 hotelDtoList.set(hotelRequest.getOrder(), respHotelsParser.getInfo(hotelRequest));
                                 latch.countDown();
-                            },
-                            error -> System.out.println("All API Requests Completed")
+                            }
                     );
             try {
                 latch.await();

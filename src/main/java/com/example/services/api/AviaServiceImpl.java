@@ -60,8 +60,7 @@ public class AviaServiceImpl {
                                 RespAviaParser respAviaParser = new RespAviaParser(responseFinal);
                                 aviaDtoList.set(aviaRequest.getOrder(), respAviaParser.getInfo(aviaRequest));
                                 latch.countDown();
-                            },
-                            error -> System.out.println("All API Requests Completed")
+                            }
                     );
             try {
                 latch.await();
