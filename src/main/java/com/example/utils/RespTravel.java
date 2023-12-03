@@ -38,7 +38,7 @@ public class RespTravel {
             }
         }
         sortPathList(pathDtoList);
-        return pathDtoList.subList(0, 2);
+        return pathDtoList.subList(0, Math.min(pathDtoList.size(), 2));
     }
 
     private Optional<PathDto> filterSubjects(List<Integer> sequenceAvia, List<Integer> sequenceHotel){
