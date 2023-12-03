@@ -8,9 +8,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
-/*
-Проверяем, что дата и время указаны корректно и сортируем по самому праннему времени прибытия и цене
- */
 public class RespTravel {
     private final List<List<AviaDto>> aviaLists;
     private final List<List<HotelDto>> hotelLists;
@@ -30,11 +27,6 @@ public class RespTravel {
             sizeHotelArray.add(hotelList.size());
         }
 
-        // создаем все возможные пары комбинаций, например:
-        // есть массив [0,1,2]
-        // тогда все комбинации: [0,0,0], [0,0,1] [0,0,2]
-        // [0,1,0], [0,1,1], [0,1,2]
-        // нужно для перебора комбинаций
         List<List<Integer>> sequencesAvia = SequenceConstruction.generateSequences(sizeAviaArray);
         List<List<Integer>> sequencesHotel = SequenceConstruction.generateSequences(sizeHotelArray);
         
@@ -49,7 +41,6 @@ public class RespTravel {
         return pathDtoList.subList(0, 2);
     }
 
-    //проверяем дату
     private Optional<PathDto> filterSubjects(List<Integer> sequenceAvia, List<Integer> sequenceHotel){
         int minDim = Math.min(sequenceHotel.size(), sequenceAvia.size());
         LocalDateTime prevEndDateTime = LocalDateTime.MIN;
@@ -92,10 +83,9 @@ public class RespTravel {
             }
         }
 
-        return Optional.of(new PathDto(aviaDtoList, hotelDtoList));
+        return Optional.of(new PathDto(hotelDtoList, aviaDtoList));
     }
 
-    //сортируем по дате и цене
     private void sortPathList(List<PathDto> pathList){
         pathList.sort(new PathComparator());
     }

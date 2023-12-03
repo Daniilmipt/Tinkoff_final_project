@@ -1,12 +1,9 @@
 package com.example.models;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.UUID;
 
 @Setter
@@ -15,6 +12,7 @@ import java.util.UUID;
 @Table(name = "users")
 public class Users {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
     private UUID id = UUID.randomUUID();
 

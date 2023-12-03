@@ -2,14 +2,13 @@ package com.example.security.controller;
 
 import com.example.security.dto.AuthRequestDTO;
 import com.example.security.util.SecurityRunner;
-import com.example.services.RoleServiceImpl;
-import com.example.services.UserAndRoleServiceImpl;
-import com.example.services.UserServiceImpl;
+import com.example.services.RoleService;
+import com.example.services.UserAndRoleService;
+import com.example.services.UserService;
+import com.sun.net.httpserver.Authenticator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,32 +19,26 @@ public class AuthenticationController {
     private final SecurityRunner securityRunner;
 
     public AuthenticationController(AuthenticationManager authenticationManager,
-                                    RoleServiceImpl roleService,
-                                    UserServiceImpl userService,
-                                    UserAndRoleServiceImpl userAndRoleService) {
+                                    RoleService roleService,
+                                    UserService userService,
+                                    UserAndRoleService userAndRoleService) {
         this.securityRunner = new SecurityRunner(authenticationManager, userService, roleService, userAndRoleService);
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<Object> auth(@Valid @RequestBody AuthRequestDTO authRequest,
-                                        Model model) {
-        securityRunner.setModel(model);
+    public ResponseEntity<Authenticator.Success> auth(@Valid @RequestBody AuthRequestDTO authRequest) {
         securityRunner.authUser(authRequest);
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/out")
-    public ResponseEntity<Object> logout(Model model) {
-        securityRunner.setModel(model);
+    public ResponseEntity<Authenticator.Success> logout() {
         securityRunner.logoutUser();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<Object> addUser(@Valid @RequestBody AuthRequestDTO authenticationDto,
-                                          Model model) {
-        securityRunner.setModel(model);
+    public ResponseEntity<Authenticator.Success> addUser(@Valid @RequestBody AuthRequestDTO authenticationDto) {
         securityRunner.addUser(authenticationDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }

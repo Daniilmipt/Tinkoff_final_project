@@ -1,22 +1,19 @@
 package com.example.exception;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Builder
-public record ResponseErrorDto(
-        String error,
-        LocalDateTime timestamp
-) {
+@Data
+@AllArgsConstructor
+public class ResponseErrorDto{
+    private String error;
+    private LocalDateTime timestamp;
+
     public static ResponseEntity<Object> getErrorResponse(String message, HttpStatus status){
-        ResponseErrorDto responseErrorDto = new ResponseErrorDto(
-                message,
-                LocalDateTime.now()
-        );
-        return new ResponseEntity<>(responseErrorDto, status);
+        return new ResponseEntity<>(new ResponseErrorDto(message, LocalDateTime.now()), status);
     }
 }

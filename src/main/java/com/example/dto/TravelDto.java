@@ -2,13 +2,12 @@ package com.example.dto;
 
 import com.example.dto.avia.AviaDto;
 import com.example.dto.hotel.HotelDto;
-import com.example.models.Subject;
 import com.example.models.Travel;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,7 +20,7 @@ public class TravelDto {
     private UUID userId;
 
     @JsonProperty("total_amt")
-    private Double totalAmount;
+    private BigDecimal totalAmount;
 
     @JsonProperty("start_dttm")
     private LocalDateTime startDateTime;
@@ -38,8 +37,17 @@ public class TravelDto {
         travel.setUserId(userId);
         travel.setDeleted(0);
 
-        Double amt = aviaList.stream().mapToDouble(AviaDto::getPrice).sum()
-                + hotelList.stream().mapToDouble(HotelDto::getPrice).sum();
+        BigDecimal amt =
+                aviaList
+                    .stream()
+                    .map(AviaDto::getPrice)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add)
+                        .add(
+                                hotelList
+                                        .stream()
+                                        .map(HotelDto::getPrice)
+                                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+                        );
 
         travel.setTotalAmount(amt);
         travel.setStartDateTime(aviaList.get(0).getArrivalDateTime());

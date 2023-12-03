@@ -1,6 +1,5 @@
 package com.example.services;
 
-import com.example.models.UsersAndRoles;
 import com.example.repositories.UserAndRoleRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,10 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 @Service
-public class UserAndRoleServiceImpl {
+public class UserAndRoleService {
     private final UserAndRoleRepository userAndRoleRepository;
 
-    public UserAndRoleServiceImpl(UserAndRoleRepository userAndRoleRepository) {
+    public UserAndRoleService(UserAndRoleRepository userAndRoleRepository) {
         this.userAndRoleRepository = userAndRoleRepository;
     }
 

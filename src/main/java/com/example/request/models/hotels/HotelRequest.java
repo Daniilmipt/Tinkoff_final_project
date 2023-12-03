@@ -1,21 +1,13 @@
 package com.example.request.models.hotels;
 
-import com.example.request.models.aviasales.Passangers;
-import com.example.request.models.aviasales.Segments;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
-/*
-Класс передачи тела запроса в апи авиабилетов.
-Представляет информацию о пунктах отправления и прибытия
- */
 @Data
 public class HotelRequest {
     @NotNull

@@ -1,7 +1,6 @@
 package com.example.repositories;
 
 import com.example.models.Roles;
-import com.example.models.Subject;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

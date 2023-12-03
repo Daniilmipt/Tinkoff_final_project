@@ -8,10 +8,6 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-/*
-Класс передачи тела запроса в контроллер по получению данных о поездке.
-Из него получаем списки отелей и перелетов и идем во внешние сервисы с запросами
- */
 @Data
 public class TravelRequest {
     @NotNull

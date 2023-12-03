@@ -3,10 +3,6 @@ package com.example.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-// создаем все возможные пары комбинаций, например:
-// есть массив [0,1,2]
-// тогда все комбинации: [0,0,0], [0,0,1] [0,0,2]
-// [0,1,0], [0,1,1], [0,1,2]
 public class SequenceConstruction {
 
     public static List<List<Integer>> generateSequences(List<Integer> list) {
