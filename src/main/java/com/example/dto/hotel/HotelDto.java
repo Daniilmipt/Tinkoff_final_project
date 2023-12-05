@@ -52,4 +52,19 @@ public class HotelDto extends TravelSubjectDto {
     public LocalDateTime getArrivalDateTime() {
         return endDateTime;
     }
+
+    @Override
+    public String getName(){
+        return hotelName;
+    }
+
+    @Override
+    public SubjectTypeEnum getSubjectType(){
+        return SubjectTypeEnum.HOTEL;
+    }
+
+    @Override
+    public BigDecimal getPrice(){
+        return priceAvg;
+    }
 }

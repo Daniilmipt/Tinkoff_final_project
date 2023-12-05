@@ -3,6 +3,7 @@ package com.example.utils;
 import com.example.SubjectTypeEnum;
 import com.example.dto.avia.AviaDto;
 import com.example.request.models.aviasales.AviaRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -27,8 +28,8 @@ public class RespAviaParser {
 
     private final transient DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ");
 
-    public RespAviaParser(JsonNode response){
-        this.response = response;
+    public RespAviaParser(String response) throws JsonProcessingException {
+        this.response = mapper.readTree(response);
     }
     public List<AviaDto> getInfo(AviaRequest request) throws IOException {
         ArrayNode responseFinal = mapper.createObjectNode().putArray("jsonNodeList");

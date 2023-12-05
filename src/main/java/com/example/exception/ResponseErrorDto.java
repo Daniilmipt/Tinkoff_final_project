@@ -12,8 +12,4 @@ import java.time.LocalDateTime;
 public class ResponseErrorDto{
     private String error;
     private LocalDateTime timestamp;
-
-    public static ResponseEntity<Object> getErrorResponse(String message, HttpStatus status){
-        return new ResponseEntity<>(new ResponseErrorDto(message, LocalDateTime.now()), status);
-    }
 }

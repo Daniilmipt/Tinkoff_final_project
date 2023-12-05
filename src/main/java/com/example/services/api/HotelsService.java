@@ -1,10 +1,10 @@
 package com.example.services.api;
 
 import com.example.dto.hotel.HotelDto;
+import com.example.exception.CustomRuntimeException;
 import com.example.exception.InterruptThreadException;
 import com.example.request.models.hotels.HotelRequest;
 import com.example.utils.RespHotelsParser;
-import com.fasterxml.jackson.databind.JsonNode;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
@@ -32,13 +37,13 @@ public class HotelsService {
         this.rateLimiter = rateLimiter;
     }
 
-    private String handleUrl(HotelRequest hotelRequest) {
-        return UriComponentsBuilder.fromUriString(baseUrl)
+    private URI handleUrl(HotelRequest hotelRequest) {
+        return URI.create(UriComponentsBuilder.fromUriString(baseUrl)
                 .queryParam("location", hotelRequest.getCity())
                 .queryParam("checkIn", hotelRequest.getStartDateTime())
                 .queryParam("checkOut", hotelRequest.getEndDateTime())
                 .build()
-                .toUriString();
+                .toUriString());
     }
 
     public List<List<HotelDto>> handleRequest(List<HotelRequest> hotelRequests) throws InterruptedException {
@@ -66,17 +71,26 @@ public class HotelsService {
     }
 
     public CompletableFuture<List<HotelDto>> makeApiRequestAsync(HotelRequest hotelRequest) {
-        return CompletableFuture.supplyAsync(() -> makeApiRequest(hotelRequest));
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return makeApiRequest(hotelRequest);
+            } catch (IOException | InterruptedException e) {
+                throw new CustomRuntimeException(e.getMessage());
+            }
+        });
     }
 
-    public List<HotelDto> makeApiRequest(HotelRequest hotelRequest) {
-        JsonNode response = webClient.get()
+    public List<HotelDto> makeApiRequest(HotelRequest hotelRequest) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
                 .uri(handleUrl(hotelRequest))
-                .retrieve()
-                .bodyToMono(JsonNode.class)
-                .block();
+                .GET()
+                .build();
 
-        RespHotelsParser respHotelsParser = new RespHotelsParser(response);
+        HttpResponse<String> response = HttpClient.newBuilder()
+                .build()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+
+        RespHotelsParser respHotelsParser = new RespHotelsParser(response.body());
         return respHotelsParser.getInfo(hotelRequest);
     }
 }

@@ -63,4 +63,14 @@ public class AviaDto extends TravelSubjectDto {
 
     @JsonProperty("content")
     private SubjectTypeEnum subjectTypeEnum;
+
+    @Override
+    public String getName(){
+        return carrier;
+    }
+
+    @Override
+    public SubjectTypeEnum getSubjectType(){
+        return SubjectTypeEnum.AVIA;
+    }
 }

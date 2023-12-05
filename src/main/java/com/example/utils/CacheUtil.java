@@ -21,9 +21,9 @@ public class CacheUtil {
     private String cacheName;
 
     public List<PathDto> getCacheValue(String cacheName, TravelRequest key) {
-        Cache.ValueWrapper obj = Objects.requireNonNull(cacheManager.getCache(cacheName)).get(key);
-        if (obj != null) {
-            return (List<PathDto>) obj.get();
+        Cache.ValueWrapper cacheValue = Objects.requireNonNull(cacheManager.getCache(cacheName)).get(key);
+        if (cacheValue != null) {
+            return (List<PathDto>) cacheValue.get();
         }
         return null;
     }

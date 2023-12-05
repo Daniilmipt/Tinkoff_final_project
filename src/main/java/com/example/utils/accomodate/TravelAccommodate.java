@@ -4,7 +4,6 @@ import com.example.SubjectTypeEnum;
 import com.example.dto.*;
 import com.example.dto.avia.AviaDto;
 import com.example.dto.hotel.HotelDto;
-import com.example.mapper.TravelSubjectDtoMapper;
 import com.example.models.Subject;
 import com.example.models.SubjectType;
 import com.example.models.Travel;
@@ -53,71 +52,79 @@ public class TravelAccommodate {
     @Transactional
     public List<PathDto> save(List<PathDto> responses, UUID userId) throws JsonProcessingException {
 
+        SubjectTypeDto hotelType = null;
+        SubjectTypeDto aviaType = null;
+        if (!responses.isEmpty()){
+            if (!responses.get(0).getHotelDto().isEmpty())
+                hotelType = subjectTypeService.save(new SubjectType(SubjectTypeEnum.HOTEL.get()));
+
+            if (!responses.get(0).getAviaDto().isEmpty())
+                aviaType = subjectTypeService.save(new SubjectType(SubjectTypeEnum.AVIA.get()));
+        }
+
         for (PathDto response : responses){
-            List<AviaDto> aviaDtoList = response.getAviaDto();
-            List<HotelDto> hotelDtoList = response.getHotelDto();
-            int minDim = Math.min(aviaDtoList.size(), hotelDtoList.size());
-            Travel travel = TravelDto.convertToTravel(aviaDtoList, hotelDtoList, userId);
+            if (!response.getAviaDto().isEmpty() || !response.getHotelDto().isEmpty()) {
+                List<AviaDto> aviaDtoList = response.getAviaDto();
+                List<HotelDto> hotelDtoList = response.getHotelDto();
+                int minDim = Math.min(aviaDtoList.size(), hotelDtoList.size());
+                Travel travel = TravelDto.convertToTravel(aviaDtoList, hotelDtoList, userId);
 
-            for (int i = 0; i < minDim; i++) {
-                AviaDto aviaDto = aviaDtoList.get(i);
-                HotelDto hotelDto = hotelDtoList.get(i);
+                TravelDto travelDtoSaved = travelService.save(travel);
 
-                SubjectType aviaSubjectType = new SubjectType(SubjectTypeEnum.AVIA.get());
-                SubjectType hotelSubjectType = new SubjectType(SubjectTypeEnum.HOTEL.get());
+                for (int i = 0; i < minDim; i++) {
+                    AviaDto aviaDto = aviaDtoList.get(i);
+                    HotelDto hotelDto = hotelDtoList.get(i);
 
-                Subject aviaSubject = new Subject(aviaDto.getCarrier());
-                Subject hotelSubject = new Subject(hotelDto.getHotelName());
+                    Subject aviaSubject = new Subject(aviaDto.getCarrier());
+                    Subject hotelSubject = new Subject(hotelDto.getHotelName());
 
-                saveRow(travel, aviaSubject, aviaSubjectType, aviaDto);
-                saveRow(travel, hotelSubject, hotelSubjectType, hotelDto);
-            }
+                    SubjectDto aviaDtoSaved = saveRow(aviaSubject, aviaType);
+                    SubjectDto hotelDtoSaved = saveRow(hotelSubject, hotelType);
 
-            for (int i = minDim; i < Math.max(aviaDtoList.size(), hotelDtoList.size()); i++) {
-                TravelSubjectDto travelSubjectDto = aviaDtoList.size() > hotelDtoList.size() ?
-                        aviaDtoList.get(i) : hotelDtoList.get(i);
-                saveSubjectAndSubjectType(travelSubjectDto, travel);
+                    saveData(aviaDtoSaved, travelDtoSaved, aviaDto);
+                    saveData(hotelDtoSaved, travelDtoSaved, hotelDto);
+                }
+
+                for (int i = minDim; i < Math.max(aviaDtoList.size(), hotelDtoList.size()); i++) {
+                    TravelSubjectDto travelSubjectDto;
+                    SubjectTypeDto subjectTypeDto;
+
+                    if (aviaDtoList.size() > hotelDtoList.size()){
+                        travelSubjectDto = aviaDtoList.get(i);
+                        subjectTypeDto = subjectTypeService.save(new SubjectType(SubjectTypeEnum.AVIA.get()));
+                    } else {
+                        travelSubjectDto = hotelDtoList.get(i);
+                        subjectTypeDto = subjectTypeService.save(new SubjectType(SubjectTypeEnum.HOTEL.get()));
+                    }
+
+                    Subject subject = new Subject(travelSubjectDto.getSubjectType().get());
+                    SubjectDto travelSubjectDtoSaved = saveRow(subject, subjectTypeDto);
+
+                    saveData(travelSubjectDtoSaved, travelDtoSaved, travelSubjectDto);
+                }
             }
         }
         return responses;
     }
 
 
-    public void saveRow(Travel travel,
-                                       Subject subject,
-                                       SubjectType subjectType,
-                                       TravelSubjectDto travelSubjectDto) throws JsonProcessingException {
+    public SubjectDto saveRow(Subject subject, SubjectTypeDto subjectTypeDto) {
 
-        SubjectTypeDto subjectTypeDtoSaved = subjectTypeService.save(subjectType);
-
-        subject.setSubjectTypeId(subjectTypeDtoSaved.getId());
-        SubjectDto subjectDtoSaved = subjectService.save(subject);
-
-        saveData(subjectDtoSaved, travel, travelSubjectDto);
+        subject.setSubjectTypeId(subjectTypeDto.getId());
+        return subjectService.save(subject);
     }
 
-    private void saveSubjectAndSubjectType(TravelSubjectDto travelSubjectDto, Travel travel) throws JsonProcessingException {
-
-        SubjectType subjectType = new SubjectType(TravelSubjectDtoMapper.getSubjectTypeName(travelSubjectDto));
-        Subject subject = new Subject(TravelSubjectDtoMapper.getSubjectName(travelSubjectDto));
-        saveRow(travel, subject, subjectType, travelSubjectDto);
-    }
-
-    private void saveData(SubjectDto subjectDto,
-                                         Travel travel,
+    private void saveData(SubjectDto subjectDtoSaved,
+                                         TravelDto travelDtoSaved,
                                          TravelSubjectDto travelSubjectDto) throws JsonProcessingException {
         TravelAndSubject travelAndSubject = new TravelAndSubject();
-
-        TravelDto travelDtoSaved = travelService.save(travel);
-
-        travelAndSubject.setTravelAndSubjectId(new TravelAndSubjectId(travelDtoSaved.getTravelId(), subjectDto.getId()));
+        travelAndSubject.setTravelAndSubjectId(new TravelAndSubjectId(travelDtoSaved.getTravelId(), subjectDtoSaved.getId()));
         travelAndSubject.setStartDateTime(travelSubjectDto.getDepartureDateTime());
         travelAndSubject.setEndDateTime(travelSubjectDto.getArrivalDateTime());
         travelAndSubject.setTotalAmount(travelSubjectDto.getPrice());
         travelAndSubject.getTravelAndSubjectId().setFeatures(mapper.writeValueAsString(travelSubjectDto));
 
-        SubjectTypeEnum subjectTypeEnum = travelSubjectDto instanceof AviaDto ?
-                SubjectTypeEnum.AVIA : SubjectTypeEnum.HOTEL;
+        SubjectTypeEnum subjectTypeEnum = travelSubjectDto.getSubjectType();
         travelAndSubjectService.save(travelAndSubject, subjectTypeEnum);
         travelAndSubjectService.save(travelAndSubject, subjectTypeEnum);
     }
