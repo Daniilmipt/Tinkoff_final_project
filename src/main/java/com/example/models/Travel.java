@@ -1,16 +1,14 @@
 package com.example.models;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Setter
@@ -26,7 +24,7 @@ public class Travel {
     private UUID userId;
 
     @Column(name = "total_amt")
-    private Double totalAmount;
+    private BigDecimal totalAmount;
 
     @Column(name = "start_dt")
     private LocalDateTime startDateTime;

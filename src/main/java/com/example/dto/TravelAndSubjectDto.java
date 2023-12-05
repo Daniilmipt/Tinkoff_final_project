@@ -4,6 +4,7 @@ import com.example.SubjectTypeEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -19,7 +20,7 @@ public class TravelAndSubjectDto {
     private LocalDateTime endDateTime;
 
     @JsonProperty("total_amt")
-    private Double totalAmount;
+    private BigDecimal totalAmount;
 
     @JsonProperty("features")
     private String features;

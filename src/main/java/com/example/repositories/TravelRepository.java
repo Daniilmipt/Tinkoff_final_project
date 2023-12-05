@@ -14,10 +14,10 @@ import java.util.UUID;
 public interface TravelRepository extends CrudRepository<Travel, UUID> {
     Optional<Travel> findTravelByTravelId(UUID travelId);
 
-    @Query("select t.travelId from Travel t where t.userId = :userId")
-    List<UUID> findTravelIdByUserId(UUID userId);
-
     @Query("update Travel t set t.deleted = 1 where t.userId=:userId")
     @Modifying
     void removeAllByUserId(UUID userId);
+
+    @Query("select t from Travel t where t.deleted = 0")
+    List<Travel> findAllCurrentTravel();
 }

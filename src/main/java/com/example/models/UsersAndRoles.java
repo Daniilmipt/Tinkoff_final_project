@@ -1,13 +1,12 @@
 package com.example.models;
 
-import com.example.models.keys.TravelAndSubjectId;
 import com.example.models.keys.UsersAndRolesId;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
-import java.util.UUID;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Setter
 @Getter

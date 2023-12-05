@@ -1,6 +1,6 @@
 package com.example.security.config;
 
-import com.example.services.UserServiceImpl;
+import com.example.services.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +17,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     @Autowired
     @Qualifier("delegatedAuthenticationEntryPoint")
@@ -28,7 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     CustomAccessDeniedHandler customAccessDeniedHandler;
 
 
-    public WebSecurityConfig(UserServiceImpl userService) {
+    public WebSecurityConfig(UserService userService) {
         this.userService = userService;
     }
 
@@ -40,10 +40,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/auth").not().fullyAuthenticated()
                 .antMatchers(HttpMethod.DELETE, "/out").fullyAuthenticated()
                 .antMatchers(HttpMethod.POST, "/registration").not().fullyAuthenticated()
-                .antMatchers(HttpMethod.GET, "/remove").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/remove").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/save").hasAnyRole("ADMIN", "USER")
-                .antMatchers(HttpMethod.GET, "/get").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/get").hasAnyRole("ADMIN", "USER")
                 .antMatchers(HttpMethod.GET, "/show").permitAll()
+                .antMatchers(HttpMethod.GET, "/getAllTravels").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/travelers").hasAnyRole("ADMIN")
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(authEntryPoint)

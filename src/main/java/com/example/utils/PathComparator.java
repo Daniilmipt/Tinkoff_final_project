@@ -4,17 +4,33 @@ import com.example.dto.PathDto;
 import com.example.dto.avia.AviaDto;
 import com.example.dto.hotel.HotelDto;
 
+import java.math.BigDecimal;
 import java.util.Comparator;
 
-//сортируем по дате и цене
 public class PathComparator implements Comparator<PathDto> {
     @Override
     public int compare(PathDto pathDto, PathDto t1) {
-        Double firstSum = pathDto.getAviaDto().stream().mapToDouble(AviaDto::getPrice).sum()
-                + pathDto.getHotelDto().stream().mapToDouble(HotelDto::getPrice).sum();
+        BigDecimal firstSum = pathDto.getAviaDto()
+                .stream()
+                .map(AviaDto::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .add(
+                        pathDto.getHotelDto()
+                                .stream()
+                                .map(HotelDto::getPrice)
+                                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                );
 
-        Double secondSum = t1.getAviaDto().stream().mapToDouble(AviaDto::getPrice).sum()
-                + t1.getHotelDto().stream().mapToDouble(HotelDto::getPrice).sum();
+        BigDecimal secondSum = t1.getAviaDto()
+                .stream()
+                .map(AviaDto::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .add(
+                        t1.getHotelDto()
+                                .stream()
+                                .map(HotelDto::getPrice)
+                                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                );
 
         int firstTime = pathDto
                 .getAviaDto().get(pathDto.getAviaDto().size()-1)

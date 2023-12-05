@@ -3,17 +3,17 @@ package com.example.models;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.id.IdentifierGenerator;
 
-import javax.management.relation.Role;
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.UUID;
 
 @Setter
 @Getter
 @Entity
+@NoArgsConstructor
 @Table(name = "roles")
 public class Roles {
     @Id
@@ -26,6 +26,4 @@ public class Roles {
     public Roles(String name){
         this.name = name;
     }
-
-    public Roles(){}
 }

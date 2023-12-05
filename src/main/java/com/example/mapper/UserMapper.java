@@ -1,8 +1,6 @@
 package com.example.mapper;
 
-import com.example.dto.TravelDto;
 import com.example.dto.UsersDto;
-import com.example.models.Travel;
 import com.example.models.Users;
 
 import java.util.Optional;

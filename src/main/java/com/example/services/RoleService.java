@@ -9,16 +9,12 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class RoleServiceImpl {
+public class RoleService {
     private final RoleRepository roleRepository;
 
 
-    public RoleServiceImpl(RoleRepository roleRepository) {
+    public RoleService(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
-    }
-
-    public Optional<RolesDto> findRolesByName(String name){
-        return RolesMapper.optionalEntityToDto(roleRepository.findRolesByName(name));
     }
 
     public RolesDto save(Roles role){

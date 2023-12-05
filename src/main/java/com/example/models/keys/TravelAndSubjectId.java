@@ -1,16 +1,12 @@
 package com.example.models.keys;
 
-import com.example.models.Subject;
-import com.example.models.Travel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
-import java.io.Serializable;
-import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
+import java.util.UUID;
 
 
 @Setter

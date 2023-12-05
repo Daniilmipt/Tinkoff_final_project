@@ -11,8 +11,9 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.sql.SQLException;
 import java.util.concurrent.ExecutionException;
@@ -106,6 +107,22 @@ public class TravelExceptionHandler {
         return ResponseErrorDto.getErrorResponse(
                 "Too many requests in period",
                 HttpStatus.TOO_MANY_REQUESTS
+        );
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<Object> handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
+        return ResponseErrorDto.getErrorResponse(
+                "Неправильное значение параметра. Проверьте передается ли оно",
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException e) {
+        return ResponseErrorDto.getErrorResponse(
+                "Неправильное значение параметра",
+                HttpStatus.BAD_REQUEST
         );
     }
 }

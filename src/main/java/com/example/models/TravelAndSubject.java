@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Setter
@@ -25,5 +26,5 @@ public class TravelAndSubject {
     private LocalDateTime endDateTime;
 
     @Column(name = "total_amt")
-    private Double totalAmount;
+    private BigDecimal totalAmount;
 }

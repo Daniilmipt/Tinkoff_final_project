@@ -2,28 +2,23 @@ package com.example.dto.avia;
 
 import com.example.SubjectTypeEnum;
 import com.example.dto.TravelSubjectDto;
-import com.example.models.Subject;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
-/*
-Итоговая сущность со всеми данными по перелету
- */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class AviaDto implements TravelSubjectDto {
+public class AviaDto extends TravelSubjectDto {
 
     @JsonProperty("groupId")
     private String groupId;
 
     @JsonProperty("price")
-    private double price;
+    private BigDecimal price;
 
     @JsonProperty("isCharter")
     private boolean isCharter;
@@ -66,51 +61,6 @@ public class AviaDto implements TravelSubjectDto {
     @JsonProperty("order")
     private Short order;
 
-    @Override
-    public LocalDateTime getDepartureDateTime() {
-        return departureDateTime;
-    }
-
-    @Override
-    public LocalDateTime getArrivalDateTime() {
-        return arrivalDateTime;
-    }
-
-    @Override
-    public double getPrice() {
-        return price;
-    }
-
-    public String createJson() throws JsonProcessingException {
-        JsonMapper mapper = new JsonMapper();
-        ObjectNode json = mapper.createObjectNode();
-        json.put("isCharter", isCharter);
-        json.put("validatingCarrier", carrier);
-        json.put("withBaggage", withBaggage);
-        json.put("withSkiEquipment", withSkiEquipment);
-        json.put("departure_airport", departureAirport);
-        json.put("departure_terminal", departureTerminal);
-        json.put("departure_city", departureCity);
-        json.put("arrival_airport", arrivalAirport);
-        json.put("arrival_terminal", arrivalTerminal);
-        json.put("arrival_city", arrivalCity);
-        json.put("order", order);
-        return mapper.writeValueAsString(json);
-    }
-
-    @Override
-    public com.example.models.SubjectType convertToSubjectType(){
-        com.example.models.SubjectType subjectType = new com.example.models.SubjectType();
-        subjectType.setName(SubjectTypeEnum.AVIA.get());
-        subjectType.setId(UUID.randomUUID());
-        return subjectType;
-    }
-
-    @Override
-    public Subject convertToSubject(){
-        Subject subject = new Subject();
-        subject.setName(carrier);
-        subject.setId(UUID.randomUUID());
-        return subject;
-    }
+    @JsonProperty("content")
+    private SubjectTypeEnum subjectTypeEnum;
 }
