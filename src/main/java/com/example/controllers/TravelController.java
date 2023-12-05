@@ -26,28 +26,28 @@ public class TravelController {
 
     private final ApplicationAccomodate applicationAccomodate;
 
-    @GetMapping("/show")
+    @GetMapping("/travel")
     public ResponseEntity<List<PathDto>> show(@Valid @RequestBody TravelRequest travelRequest) {
         return new ResponseEntity<>(applicationAccomodate.show(travelRequest), HttpStatus.OK);
     }
 
-    @PostMapping("/save")
+    @PostMapping("/travel")
     public ResponseEntity<List<PathDto>> save(@Valid @RequestBody TravelRequest travelRequest, Authentication authentication) throws JsonProcessingException, InterruptedException, ExecutionException {
         return new ResponseEntity<>(applicationAccomodate.save(travelRequest, authentication), HttpStatus.OK);
     }
 
-    @DeleteMapping("/remove")
+    @DeleteMapping("/travel")
     public ResponseEntity<Authenticator.Success> remove(@RequestParam(value="user_id") UUID userId) {
         applicationAccomodate.remove(userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/get")
+    @GetMapping("/travel/basket")
     public ResponseEntity<List<TravelAndSubjectDto>> get(Authentication authentication) throws JsonProcessingException {
         return new ResponseEntity<>(applicationAccomodate.get(authentication), HttpStatus.OK);
     }
 
-    @GetMapping("/travelers")
+    @GetMapping("/travel/user/basket")
     public ResponseEntity<List<TravelDto>> getTravelers(){
         return new ResponseEntity<>(applicationAccomodate.getAllCurrentTravels(), HttpStatus.OK);
     }

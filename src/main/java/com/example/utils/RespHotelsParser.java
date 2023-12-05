@@ -3,7 +3,10 @@ package com.example.utils;
 import com.example.SubjectTypeEnum;
 import com.example.dto.hotel.HotelDto;
 import com.example.request.models.hotels.HotelRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -17,11 +20,14 @@ import java.util.Map;
 @Getter
 public class RespHotelsParser {
     private final JsonNode response;
+    private final JsonMapper mapper = JsonMapper.builder()
+            .addModule(new JavaTimeModule())
+            .build();
 
     private final static Map<String, String> mapCityTranslit = TransliterationCity.mapCityTranslit;
 
-    public RespHotelsParser(JsonNode response){
-        this.response = response;
+    public RespHotelsParser(String response) throws JsonProcessingException {
+        this.response = mapper.readTree(response);
     }
 
     public List<HotelDto> getInfo(HotelRequest request){
